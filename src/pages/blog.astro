@@ -1,0 +1,55 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Blog | Nahome Hagos">
+  <div class="max-w-3xl mx-auto py-8">
+    <h1 class="text-4xl font-bold">Blog</h1>
+    
+    <!-- Substack feed container -->
+    <div id="substack-feed-embed" class="mt-8"></div>
+    
+    <!-- Substack configuration with theme detection -->
+    <script is:inline>
+      // Function to set colors based on dark/light mode
+      function updateSubstackColors() {
+        const isDarkMode = document.documentElement.classList.contains('dark');
+        
+        window.SubstackFeedWidget = {
+          substackUrl: "nahomehagos.substack.com",
+          posts: 2,
+          colors: isDarkMode ? 
+            {
+              // Dark mode colors
+              primary: "#ffffff",
+              secondary: "#c0c0c0", 
+              background: "#1a1a1a"
+            } : 
+            {
+              // Light mode colors
+              primary: "#404040",
+              secondary: "#808080",
+              background: "#FFFFFF"
+            }
+        };
+        
+        // Re-initialize by removing and re-adding the script
+        const oldScript = document.querySelector('script[src="https://substackapi.com/embeds/feed.js"]');
+        if (oldScript) oldScript.remove();
+        
+        const newScript = document.createElement('script');
+        newScript.src = "https://substackapi.com/embeds/feed.js";
+        newScript.async = true;
+        document.body.appendChild(newScript);
+      }
+      
+      // Initialize colors on load
+      document.addEventListener('DOMContentLoaded', updateSubstackColors);
+      
+      // Listen for theme changes from the theme toggle
+      document.addEventListener('themeChanged', updateSubstackColors);
+    </script>
+    
+    <!-- Substack API script is now dynamically added in the script above -->
+  </div>
+</Layout>
