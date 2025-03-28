@@ -23,7 +23,7 @@ jobs:
       run: npm run build
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@a88d1b2a0a8b0b28c9e0e2b5a33e2929e4a7e727  # Replace with actual SHA for v3
       with:
         name: build
         path: ./build
