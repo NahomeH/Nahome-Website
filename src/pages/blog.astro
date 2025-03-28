@@ -1,55 +1,187 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { parseStringPromise } from 'xml2js'; // You'll need to install this: npm install xml2js
+
+// Define interfaces for type safety
+interface Post {
+  title: string;
+  link: string;
+  description: string;
+  pubDate: string;
+}
+
+// Function to convert published date to a more readable format
+function formatDate(dateString: string) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+}
+
+// Fetch the RSS feed
+let posts: Post[] = [];
+let error: string | null = null;
+
+try {
+  const response = await fetch('https://nahomehagos.substack.com/feed');
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch RSS feed: ${response.statusText}`);
+  }
+  
+  const xmlData = await response.text();
+  const result = await parseStringPromise(xmlData, { explicitArray: false });
+  
+  posts = result.rss.channel.item.map((item: any) => ({
+    title: item.title,
+    link: item.link,
+    description: item.description,
+    pubDate: formatDate(item.pubDate),
+  }));
+  
+  posts = posts.slice(0, 5);
+  
+} catch (err: unknown) {
+  console.error('Error fetching or parsing RSS feed:', err);
+  error = err instanceof Error ? err.message : String(err);
+}
 ---
 
 <Layout title="Blog | Nahome Hagos">
-  <div class="max-w-3xl mx-auto py-8">
-    <h1 class="text-4xl font-bold">Blog</h1>
+  <div class="max-w-3xl mx-auto py-8 relative">
+    <!-- Subscribe Button -->
+    <div class="absolute top-0 right-0 mt-2 mr-2 md:mt-0 md:mr-0">
+      <button id="subscribe-button" class="bg-neutral-800 text-white px-4 py-2 rounded-md hover:bg-neutral-700 transition-colors text-sm font-medium flex items-center">
+        Subscribe to Newsletter
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      </button>
+    </div>
     
-    <!-- Substack feed container -->
-    <div id="substack-feed-embed" class="mt-8"></div>
+    <!-- Substack Embed Modal with Iframe (Initially Hidden) -->
+    <div id="newsletter-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+      <div class="bg-white dark:bg-neutral-800 p-6 rounded-lg max-w-md w-full relative">
+        <button id="close-modal" class="absolute top-2 right-2 text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        <iframe src="https://nahomehagos.substack.com/embed" width="100%" height="320" style="border:1px solid #EEE; background:white;" frameborder="0" scrolling="no"></iframe>
+      </div>
+    </div>
     
-    <!-- Substack configuration with theme detection -->
-    <script is:inline>
-      // Function to set colors based on dark/light mode
-      function updateSubstackColors() {
-        const isDarkMode = document.documentElement.classList.contains('dark');
-        
-        window.SubstackFeedWidget = {
-          substackUrl: "nahomehagos.substack.com",
-          posts: 2,
-          colors: isDarkMode ? 
-            {
-              // Dark mode colors
-              primary: "#ffffff",
-              secondary: "#c0c0c0", 
-              background: "#1a1a1a"
-            } : 
-            {
-              // Light mode colors
-              primary: "#404040",
-              secondary: "#808080",
-              background: "#FFFFFF"
-            }
-        };
-        
-        // Re-initialize by removing and re-adding the script
-        const oldScript = document.querySelector('script[src="https://substackapi.com/embeds/feed.js"]');
-        if (oldScript) oldScript.remove();
-        
-        const newScript = document.createElement('script');
-        newScript.src = "https://substackapi.com/embeds/feed.js";
-        newScript.async = true;
-        document.body.appendChild(newScript);
-      }
-      
-      // Initialize colors on load
-      document.addEventListener('DOMContentLoaded', updateSubstackColors);
-      
-      // Listen for theme changes from the theme toggle
-      document.addEventListener('themeChanged', updateSubstackColors);
-    </script>
+    <!-- Add space between button and posts -->
+    <div class="h-6"></div>
     
-    <!-- Substack API script is now dynamically added in the script above -->
+    {error && (
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6" role="alert">
+        <p>Unable to load blog posts: {error}</p>
+        <p class="text-sm">Please check back later or visit my <a href="https://nahomehagos.substack.com" class="underline">Substack directly</a>.</p>
+      </div>
+    )}
+    
+    {!error && posts.length === 0 && (
+      <div class="bg-amber-50 border border-amber-200 text-neutral-700 px-4 py-3 rounded mb-6">
+        <p>No posts found. Please check back later or visit my <a href="https://nahomehagos.substack.com" class="underline">Substack directly</a>.</p>
+      </div>
+    )}
+    
+    <div class="space-y-8">
+      {posts.map(post => (
+        <a 
+          href={post.link} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="block p-6 border border-neutral-300 dark:border-neutral-700 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01] bg-card-100"
+        >
+          <h2 class="text-2xl font-bold mb-2 text-neutral-800 dark:text-white">{post.title}</h2>
+          
+          <div class="text-sm text-neutral-500 dark:text-neutral-400 flex items-center space-x-2 mb-4">
+            <span>Nahome Hagos</span>
+            <span>•</span>
+            <span>{post.pubDate}</span>
+          </div>
+          
+          <div class="prose prose-sm dark:prose-invert line-clamp-3 mb-2" set:html={post.description.split('</p>')[0] + '</p>'} />
+          
+          <div class="text-sm font-medium text-neutral-700 dark:text-neutral-300 mt-4 inline-flex items-center">
+            Read more
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </div>
+        </a>
+      ))}
+    </div>
+    
+    <div class="mt-8 text-center">
+      <a 
+        href="https://nahomehagos.substack.com" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        class="inline-flex items-center px-5 py-2.5 bg-neutral-800 dark:bg-neutral-800 text-white rounded-md hover:bg-neutral-700 dark:hover:bg-neutral-700 transition-all"
+      >
+        View all posts on Substack
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+        </svg>
+      </a>
+    </div>
   </div>
 </Layout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const subscribeButton = document.getElementById('subscribe-button');
+    const newsletterModal = document.getElementById('newsletter-modal');
+    const closeModalButton = document.getElementById('close-modal');
+    
+    // Show modal when subscribe button is clicked
+    subscribeButton?.addEventListener('click', () => {
+      newsletterModal?.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden'); // Prevent scrolling when modal is open
+    });
+    
+    // Hide modal when close button is clicked
+    closeModalButton?.addEventListener('click', () => {
+      newsletterModal?.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    });
+    
+    // Hide modal when clicking outside of it
+    newsletterModal?.addEventListener('click', (event) => {
+      if (event.target === newsletterModal) {
+        newsletterModal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+      }
+    });
+  });
+</script>
+
+<style>
+  /* Styling for post content images */
+  .prose img {
+    @apply rounded-md;
+  }
+  
+  /* Fix for dark mode text */
+  html.dark .prose {
+    @apply text-neutral-300;
+  }
+  
+  /* Custom line clamp for post descriptions */
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  /* Make sure the modal appears on top of everything */
+  #newsletter-modal {
+    z-index: 9999;
+  }
+</style>

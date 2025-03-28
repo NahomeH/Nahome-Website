@@ -17,7 +17,7 @@ const currentPath = Astro.url.pathname;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body class="max-w-6xl mx-auto px-6 py-4 bg-warm-beige-darker dark:bg-neutral-800">
+  <body class="max-w-6xl mx-auto px-6 py-4 bg-amber-50 dark:bg-neutral-800">
     <!-- Theme toggle button -->
     <div class="fixed top-4 right-4 z-50">
       <button id="theme-toggle" aria-label="Toggle dark mode" class="p-2 bg-neutral-100 dark:bg-neutral-800 rounded-full shadow-md transition-all hover:scale-110">
@@ -130,7 +130,7 @@ const currentPath = Astro.url.pathname;
   nav a.active {
     font-weight: 700; /* Slightly bolder font */
     color: black;
-    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+    transition: color 0.3s ease; /* Smooth transition */
   }
 
   html.dark nav a.active {
@@ -145,18 +145,15 @@ const currentPath = Astro.url.pathname;
   .fade-in {
     animation: fadeIn 0.5s ease-in;
   }
-  
-  /* Use sticky positioning with Tailwind instead */
-  .md\:sticky {
-    position: sticky;
-  }
 
   /* Add dark mode detection */
   html {
     color-scheme: light dark;
+    color: #333; /* Default text color for light mode */
   }
 
   html.dark {
     color-scheme: dark;
+    color: #fff; /* White text in dark mode */
   }
 </style> 

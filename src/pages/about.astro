@@ -3,10 +3,144 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="About | Nahome Hagos">
-  <section>
+  <main class="container mx-auto px-4 py-8 max-w-4xl">
+    <h1 class="text-4xl font-bold mb-8 text-center">About Me</h1>
     
-    <p>Tell me about yourself and your background.</p>
-    
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4 border-b pb-2">Personal Introduction</h2>
+      <div class="flex flex-col md:flex-row gap-8 items-center">
+        <div class="md:w-1/3">
+          <!-- Replace with your actual profile image -->
+          <div class="aspect-square bg-gray-200 rounded-full flex items-center justify-center text-gray-500">
+            [Profile Image]
+          </div>
+        </div>
+        <div class="md:w-2/3">
+          <p class="mb-4">
+            Hello! I'm [Your Name], a [Your Profession] based in [Your Location]. 
+            Write a brief personal introduction here (2-3 sentences about what drives you and your professional identity).
+          </p>
+          <p>
+            Add a second paragraph sharing something more personal about yourself, your philosophy, 
+            or what makes you unique in your field.
+          </p>
+        </div>
+      </div>
+    </section>
 
-  </section>
-</Layout> 
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4 border-b pb-2">Background & Journey</h2>
+      <p class="mb-4">
+        Share your professional journey here. How did you get to where you are today? 
+        What pivotal moments shaped your career path? What challenges did you overcome?
+      </p>
+      <p>
+        This is a good place to tell your story in a narrative format rather than just listing achievements.
+        Make it personal and engaging.
+      </p>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4 border-b pb-2">Skills & Expertise</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <!-- Replace these with your actual skills -->
+        <div class="bg-gray-100 p-4 rounded shadow-sm">
+          <h3 class="font-medium mb-2">Skill Category 1</h3>
+          <ul class="list-disc list-inside">
+            <li>Skill 1</li>
+            <li>Skill 2</li>
+            <li>Skill 3</li>
+          </ul>
+        </div>
+        <div class="bg-gray-100 p-4 rounded shadow-sm">
+          <h3 class="font-medium mb-2">Skill Category 2</h3>
+          <ul class="list-disc list-inside">
+            <li>Skill 1</li>
+            <li>Skill 2</li>
+            <li>Skill 3</li>
+          </ul>
+        </div>
+        <div class="bg-gray-100 p-4 rounded shadow-sm">
+          <h3 class="font-medium mb-2">Skill Category 3</h3>
+          <ul class="list-disc list-inside">
+            <li>Skill 1</li>
+            <li>Skill 2</li>
+            <li>Skill 3</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4 border-b pb-2">Experience Highlights</h2>
+      <div class="space-y-6">
+        <!-- Replace with your actual experiences -->
+        <div class="border-l-4 pl-4 border-gray-300">
+          <h3 class="font-bold">Position Title</h3>
+          <p class="text-gray-600">Company Name | Years</p>
+          <p class="mt-2">
+            Describe your role, responsibilities, and key achievements here.
+            Focus on impact and results rather than just listing duties.
+          </p>
+        </div>
+        <div class="border-l-4 pl-4 border-gray-300">
+          <h3 class="font-bold">Position Title</h3>
+          <p class="text-gray-600">Company Name | Years</p>
+          <p class="mt-2">
+            Describe your role, responsibilities, and key achievements here.
+            Focus on impact and results rather than just listing duties.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4 border-b pb-2">Personal Interests</h2>
+      <p class="mb-4">
+        Share what you're passionate about outside of work. This helps create a more rounded picture of who you are.
+        What do you enjoy doing in your free time? What hobbies keep you engaged and why?
+      </p>
+      <div class="flex flex-wrap gap-2 mt-4">
+        <!-- Replace with your actual interests -->
+        <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Interest 1</span>
+        <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Interest 2</span>
+        <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Interest 3</span>
+        <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Interest 4</span>
+        <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Interest 5</span>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-semibold mb-4 border-b pb-2">Let's Connect</h2>
+      <p class="mb-4">
+        I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
+        Feel free to reach out to me through any of the following channels:
+      </p>
+      <div class="flex flex-wrap gap-4 mt-6">
+        <!-- Replace with your actual social links -->
+        <a href="#" class="inline-flex items-center gap-2 bg-blue-100 hover:bg-blue-200 px-4 py-2 rounded transition">
+          <span>Email</span>
+        </a>
+        <a href="#" class="inline-flex items-center gap-2 bg-blue-100 hover:bg-blue-200 px-4 py-2 rounded transition">
+          <span>LinkedIn</span>
+        </a>
+        <a href="#" class="inline-flex items-center gap-2 bg-blue-100 hover:bg-blue-200 px-4 py-2 rounded transition">
+          <span>GitHub</span>
+        </a>
+        <a href="#" class="inline-flex items-center gap-2 bg-blue-100 hover:bg-blue-200 px-4 py-2 rounded transition">
+          <span>Twitter</span>
+        </a>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  /* Add any custom styles specific to the about page here */
+  h1 {
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+</style> 
